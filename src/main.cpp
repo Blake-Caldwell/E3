@@ -19,7 +19,7 @@ int NxN = 0;
 int N = 0;
 
 
-std::vector<glm::vec2> VBO;
+std::vector<glm::ivec2> VBO;
 uint32_t VBOHandle = 0;
 
 std::vector<int> VAO;
@@ -78,13 +78,17 @@ void init()
 	{
 		for (int x = 0; x <= NxN; x += CellSize)
 		{
-			VBO.push_back(glm::vec2{ x,y });
+			VBO.push_back(glm::ivec2{ x,y });
 		}
 	}
 
 	glGenBuffers(1, &VBOHandle);
 	glBindBuffer(GL_ARRAY_BUFFER, VBOHandle);
 	glBufferData(GL_ARRAY_BUFFER, VBO.size(), &VBO[0], GL_STATIC_DRAW);
+
+	glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(int), (void*)0);
+
+	myShader.use();
 
 
 }
@@ -95,6 +99,10 @@ void run()
 
 		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT);
+
+		UpdateVAO();
+
+		
 
 		glfwPollEvents();
 		glfwSwapBuffers(window);
@@ -112,7 +120,7 @@ void UpdateVAO()
 		{
 			if (GameOfLife.grid[x][y])
 			{
-				BLI = (y * (VAOMax)) + x;
+				BLI = (y * (VAOMax)) + x; //this is the index of the bottom left vertice
 				VAO.push_back(BLI);
 				VAO.push_back(BLI + 1);
 				VAO.push_back(BLI + VAOMax);
