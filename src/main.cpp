@@ -22,13 +22,13 @@ int N = 0;
 std::vector<glm::ivec2> VBO;
 uint32_t VBOHandle = 0;
 
-std::vector<int> VAO;
-uint32_t VAOHandle = 0;
+std::vector<int> IBO;
+uint32_t IBOHandle = 0;
 
 void init();
 void run();
 
-void UpdateVAO();
+void UpdateIBO();
 
 
 int main()
@@ -100,7 +100,7 @@ void run()
 		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT);
 
-		UpdateVAO();
+		UpdateIBO();
 
 		
 
@@ -109,22 +109,22 @@ void run()
 	}
 }
 
-void UpdateVAO()
+void UpdateIBO()
 {
 	int BLI = 0; //Bottom Left Index
-	int VAOMax = N + 1;
-	VAO.clear();
+	int IBOMax = N + 1;
+	IBO.clear();
 	for (int y = 0; y < N; y++)
 	{
 		for (int x = 0; x < N; x++)
 		{
 			if (GameOfLife.grid[x][y])
 			{
-				BLI = (y * (VAOMax)) + x; //this is the index of the bottom left vertice
-				VAO.push_back(BLI);
-				VAO.push_back(BLI + 1);
-				VAO.push_back(BLI + VAOMax);
-				VAO.push_back(BLI + VAOMax + 1);
+				BLI = (y * (IBOMax)) + x; //this is the index of the bottom left vertice
+				IBO.push_back(BLI);
+				IBO.push_back(BLI + 1);
+				IBO.push_back(BLI + IBOMax);
+				IBO.push_back(BLI + IBOMax + 1);
 			}
 		}
 	}
