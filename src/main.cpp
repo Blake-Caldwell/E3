@@ -6,17 +6,10 @@
 #include "Shader.h"
 
 GLFWwindow* window;
+Shader myShader;
 
 const int CellSize = 10;
 int N = 0;
-
-const char* vertexShaderSource = "#version 330 core\n"
-"layout (location = 0) in vec3 aPos;\n"
-"void main()\n"
-"{\n"
-"   gl_Position = vec4(aPos.x, aPos.y, aPos.z, 1.0);\n"
-"}\0";
-
 
 void init();
 void run();
@@ -55,6 +48,8 @@ void init()
 		std::cout << "Failed to initialize GLAD" << std::endl;
 		exit(-1);
 	}
+
+	myShader = Shader("assets/Shaders/shader.vs", "assets/Shaders/shader.fs");
 
 	glViewport(0, 0, NxN, NxN);
 
