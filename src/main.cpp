@@ -6,6 +6,7 @@
 #include <GLFW/glfw3.h>
 
 #include <glm/vec2.hpp>
+#include <glm/gtc/matrix_transform.hpp>
 
 #include "Shader.h"
 #include "CA.hpp"
@@ -15,14 +16,15 @@ Shader myShader;
 CA GameOfLife;
 
 const int CellSize = 10;
-int NxN = 0;
+float NxN = 0;
 int N = 0;
 
+uint32_t VAO;
 
-std::vector<glm::ivec2> VBO;
+std::vector<glm::vec2> VBO;
 uint32_t VBOHandle = 0;
 
-std::vector<int> IBO;
+std::vector<uint32_t> IBO;
 uint32_t IBOHandle = 0;
 
 void init();
@@ -60,6 +62,7 @@ void init()
 	window = glfwCreateWindow(NxN, NxN, "Exercise 3", NULL, NULL);
 	glfwMakeContextCurrent(window);
 	glfwSetWindowUserPointer(window, NULL);
+	
 
 	if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
 	{
@@ -67,10 +70,12 @@ void init()
 		exit(-1);
 	}
 
+	glViewport(0, 0, NxN, NxN);
+
 	myShader = Shader("assets/Shaders/shader.vs", "assets/Shaders/shader.fs");
 	GameOfLife = CA(N);
 
-	glViewport(0, 0, NxN, NxN);
+	
 
 	//set up the VBO
 
@@ -78,17 +83,24 @@ void init()
 	{
 		for (int x = 0; x <= NxN; x += CellSize)
 		{
-			VBO.push_back(glm::ivec2{ x,y });
+			VBO.push_back(glm::vec2{ ((float)x - 2.0f)/(NxN - 2.0f),((float)y - 2.0f)/(NxN - 2.0f)});
 		}
 	}
 
+	glGenVertexArrays(1, &VAO);
+
 	glGenBuffers(1, &VBOHandle);
 	glBindBuffer(GL_ARRAY_BUFFER, VBOHandle);
-	glBufferData(GL_ARRAY_BUFFER, VBO.size(), &VBO[0], GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, VBO.size() * sizeof(glm::vec2), &VBO[0], GL_STATIC_DRAW);
 
-	glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(int), (void*)0);
+	glEnableVertexAttribArray(0);
+	glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, sizeof(glm::vec2), 0);
 
-	myShader.use();
+	UpdateIBO();
+
+	glGenBuffers(1, &IBOHandle);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, IBOHandle);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, IBO.size() * sizeof(uint32_t), &IBO[0], GL_DYNAMIC_DRAW);
 
 
 }
@@ -97,22 +109,27 @@ void run()
 {
 	while (!glfwWindowShouldClose(window)) {
 
-		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+		glClearColor(0.2f, 0.5f, 0.7f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT);
 
+		GameOfLife.NextGeneration();
 		UpdateIBO();
 
+		myShader.use();
+		glDrawElements(GL_TRIANGLES, IBO.size(), GL_UNSIGNED_INT, nullptr);
 		
+		int x = glGetError();
 
-		glfwPollEvents();
+		
 		glfwSwapBuffers(window);
+		glfwPollEvents();
 	}
 }
 
 void UpdateIBO()
 {
-	int BLI = 0; //Bottom Left Index
-	int IBOMax = N + 1;
+	uint32_t BLI = 0; //Bottom Left Index
+	uint32_t IBOMax = N + 1;
 	IBO.clear();
 	for (int y = 0; y < N; y++)
 	{
@@ -122,10 +139,18 @@ void UpdateIBO()
 			{
 				BLI = (y * (IBOMax)) + x; //this is the index of the bottom left vertice
 				IBO.push_back(BLI);
-				IBO.push_back(BLI + 1);
-				IBO.push_back(BLI + IBOMax);
 				IBO.push_back(BLI + IBOMax + 1);
+				IBO.push_back(BLI + 1); 
+				
+				IBO.push_back(BLI);
+				IBO.push_back(BLI + IBOMax + 1);
+				IBO.push_back(BLI + IBOMax);
 			}
 		}
 	}
+
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, IBOHandle);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, IBO.size() * sizeof(uint32_t), &IBO[0], GL_DYNAMIC_DRAW);
+
+
 }

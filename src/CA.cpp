@@ -17,6 +17,7 @@ void CA::Initialize(int N)
 	for (int i = 0; i < N; i++)
 	{
 		grid.push_back(std::vector<bool>(N));
+		backgrid.push_back(std::vector<bool>(N));
 	}
 
 	auto gen = std::bind(std::uniform_int_distribution<>(0, 1), std::default_random_engine());
@@ -42,8 +43,8 @@ void CA::NextGeneration()
 			newGrid[i].push_back(false);
 		}
 	}
+	
 		
-
 	const int xNeighbours[] = {-1, 0, 1};
 	const int yNeighbours[] = {-1, 0, 1};
 
