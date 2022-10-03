@@ -30,4 +30,5 @@ void CA::Initialize(int N)
 
 void CA::NextGeneration()
 {
+
 }

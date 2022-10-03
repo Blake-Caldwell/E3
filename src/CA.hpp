@@ -11,5 +11,6 @@ struct CA
 	void NextGeneration();
 	
 	std::vector<std::vector<bool>> grid;
+	int generation = 0;
 };
 

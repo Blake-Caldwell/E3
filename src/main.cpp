@@ -4,6 +4,7 @@
 #include <GLFW/glfw3.h>
 
 #include "Shader.h"
+#include "CA.hpp"
 
 GLFWwindow* window;
 Shader myShader;
@@ -19,10 +20,15 @@ int main()
 	std::cout << " Enter the grids length (NxN)\nN: ";
 	std::cin >> N;
 	
-	init();
-	run();
+	//init();
+	//run();
 	
-	glfwTerminate();
+	//glfwTerminate();
+
+	CA yeet(N);
+
+	auto& thegrid = yeet.grid;
+
 	return 0;
 }
 
