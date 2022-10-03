@@ -135,7 +135,7 @@ void UpdateIBO()
 	{
 		for (int x = 0; x < N; x++)
 		{
-			if (GameOfLife.grid[x][y])
+			if (GameOfLife.grids[GameOfLife.currentGridIndex][x][y])
 			{
 				BLI = (y * (IBOMax)) + x; //this is the index of the bottom left vertice
 				IBO.push_back(BLI);

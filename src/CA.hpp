@@ -10,10 +10,10 @@ struct CA
 	CA(int N);
 	void Initialize(int N);
 	void NextGeneration();
-	
-	std::vector<std::vector<bool>> grid;
-	std::vector<std::vector<bool>> backgrid;
 
+	std::array<std::vector<std::vector<bool>>, 2> grids;
+
+	bool currentGridIndex = 0;
 	int generation = 0;
 	int m_n;
 };
