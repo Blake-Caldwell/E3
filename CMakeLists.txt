@@ -23,6 +23,7 @@ target_include_directories(${PROJECT_NAME} PUBLIC ${CMAKE_CURRENT_SOURCE_DIRECTO
 target_link_libraries(${PROJECT_NAME} PUBLIC
 glad
 glfw
+glm
 )
 
 add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD

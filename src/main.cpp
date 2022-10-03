@@ -1,34 +1,46 @@
 #include <iostream>
 
+#include <vector>
+
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
+
+#include <glm/vec2.hpp>
 
 #include "Shader.h"
 #include "CA.hpp"
 
 GLFWwindow* window;
 Shader myShader;
+CA GameOfLife;
 
 const int CellSize = 10;
+int NxN = 0;
 int N = 0;
+
+
+std::vector<glm::vec2> VBO;
+uint32_t VBOHandle = 0;
+
+std::vector<int> VAO;
+uint32_t VAOHandle = 0;
 
 void init();
 void run();
 
+void UpdateVAO();
+
+
 int main()
 {
-	std::cout << " Enter the grids length (NxN)\nN: ";
+	std::cout << " Enter the cell amount\nN: ";
 	std::cin >> N;
 	
-	//init();
-	//run();
+	init();
+	run();
 	
-	//glfwTerminate();
-
-	CA yeet(N);
-
-	auto& thegrid = yeet.grid;
-
+	glfwTerminate();
+	
 	return 0;
 }
 
@@ -44,7 +56,7 @@ void init()
 	if (!glfwInit())
 		return;
 
-	int NxN = CellSize * N;
+	NxN = CellSize * N;
 	window = glfwCreateWindow(NxN, NxN, "Exercise 3", NULL, NULL);
 	glfwMakeContextCurrent(window);
 	glfwSetWindowUserPointer(window, NULL);
@@ -56,8 +68,24 @@ void init()
 	}
 
 	myShader = Shader("assets/Shaders/shader.vs", "assets/Shaders/shader.fs");
+	GameOfLife = CA(N);
 
 	glViewport(0, 0, NxN, NxN);
+
+	//set up the VBO
+
+	for (int y = 0; y <= NxN; y += CellSize)
+	{
+		for (int x = 0; x <= NxN; x += CellSize)
+		{
+			VBO.push_back(glm::vec2{ x,y });
+		}
+	}
+
+	glGenBuffers(1, &VBOHandle);
+	glBindBuffer(GL_ARRAY_BUFFER, VBOHandle);
+	glBufferData(GL_ARRAY_BUFFER, VBO.size(), &VBO[0], GL_STATIC_DRAW);
+
 
 }
 
@@ -70,5 +98,26 @@ void run()
 
 		glfwPollEvents();
 		glfwSwapBuffers(window);
+	}
+}
+
+void UpdateVAO()
+{
+	int BLI = 0; //Bottom Left Index
+	int VAOMax = N + 1;
+	VAO.clear();
+	for (int y = 0; y < N; y++)
+	{
+		for (int x = 0; x < N; x++)
+		{
+			if (GameOfLife.grid[x][y])
+			{
+				BLI = (y * (VAOMax)) + x;
+				VAO.push_back(BLI);
+				VAO.push_back(BLI + 1);
+				VAO.push_back(BLI + VAOMax);
+				VAO.push_back(BLI + VAOMax + 1);
+			}
+		}
 	}
 }
