@@ -15,7 +15,9 @@ GLFWwindow* window;
 Shader myShader;
 CA GameOfLife;
 
-const int CellSize = 10;
+int windowSquare = 1000;
+
+int CellSize = 0;
 float NxN = 0;
 int N = 0;
 
@@ -58,8 +60,8 @@ void init()
 	if (!glfwInit())
 		return;
 
-	NxN = CellSize * N;
-	window = glfwCreateWindow(NxN, NxN, "Exercise 3", NULL, NULL);
+	NxN =  N * N;
+	window = glfwCreateWindow(windowSquare, windowSquare, "Exercise 3", NULL, NULL);
 	glfwMakeContextCurrent(window);
 	glfwSetWindowUserPointer(window, NULL);
 	
@@ -70,7 +72,7 @@ void init()
 		exit(-1);
 	}
 
-	glViewport(0, 0, NxN, NxN);
+	glViewport(0,0, windowSquare, windowSquare);
 
 	myShader = Shader("assets/Shaders/shader.vs", "assets/Shaders/shader.fs");
 	GameOfLife = CA(N);
@@ -79,11 +81,11 @@ void init()
 
 	//set up the VBO
 
-	for (int y = 0; y <= NxN; y += CellSize)
+	for (int y = 0; y <= N; y++)
 	{
-		for (int x = 0; x <= NxN; x += CellSize)
+		for (int x = 0; x <= N; x ++)
 		{
-			VBO.push_back(glm::vec2{ ((float)x - 2.0f)/(NxN - 2.0f),((float)y - 2.0f)/(NxN - 2.0f)});
+			VBO.push_back(glm::vec2{ ((float)x - 2.0f)/(N - 2.0f),((float)y - 2.0f)/(N - 2.0f)});
 		}
 	}
 
@@ -101,6 +103,8 @@ void init()
 	glGenBuffers(1, &IBOHandle);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, IBOHandle);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, IBO.size() * sizeof(uint32_t), &IBO[0], GL_DYNAMIC_DRAW);
+
+	
 
 
 }
