@@ -4,6 +4,7 @@
 #include <random>
 #include <thread>
 #include <functional>
+#include <chrono>
 
 
 
@@ -24,7 +25,10 @@ void CA::Initialize(int N)
 		grids[1].push_back(std::vector<bool>(N));
 	}
 
-	auto gen = std::bind(std::uniform_int_distribution<>(0, 1), std::default_random_engine());
+	time_t now = std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());
+	std::default_random_engine rng(now);
+
+	auto gen = std::bind(std::uniform_int_distribution<>(0, 1), rng);
 
 	for (int outter = 0; outter < N; outter++)
 	{
@@ -43,7 +47,6 @@ void CA::NextGeneration()
 	std::vector<std::vector<bool>>& backGrid = grids[currentGridIndex];
 	std::vector<std::vector<bool>>& currentGrid = grids[(currentGridIndex = !currentGridIndex)];
 	
-	std::vector<std::thread> threads;
 	for (int outter = 0; outter < m_n; outter++)//target vector
 	{
 		for (int inner = 0; inner < m_n; inner++)//target cell

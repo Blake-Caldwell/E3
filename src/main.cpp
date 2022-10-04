@@ -80,12 +80,12 @@ void init()
 	
 
 	//set up the VBO
-
+	float min = N / 2;
 	for (int y = 0; y <= N; y++)
 	{
 		for (int x = 0; x <= N; x ++)
 		{
-			VBO.push_back(glm::vec2{ ((float)x - 2.0f)/(N - 2.0f),((float)y - 2.0f)/(N - 2.0f)});
+			VBO.push_back(glm::vec2{ ((float)x - min)/(N - min),((float)y - min)/(N - min)});
 		}
 	}
 
