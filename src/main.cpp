@@ -56,6 +56,8 @@ void init()
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 6);
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_COMPAT_PROFILE);
 	glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE);
+	//glfwWindowHint(GLFW_DECORATED, GLFW_FALSE);
+	
 
 	if (!glfwInit())
 		return;
@@ -71,6 +73,8 @@ void init()
 		std::cout << "Failed to initialize GLAD" << std::endl;
 		exit(-1);
 	}
+
+	
 
 	glViewport(0,0, windowSquare, windowSquare);
 
@@ -113,7 +117,7 @@ void run()
 {
 	while (!glfwWindowShouldClose(window)) {
 
-		glClearColor(0.2f, 0.5f, 0.7f, 1.0f);
+		glClearColor(0.01f, 0.01f, 0.01f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT);
 
 		GameOfLife.NextGeneration();
@@ -121,8 +125,6 @@ void run()
 
 		myShader.use();
 		glDrawElements(GL_TRIANGLES, IBO.size(), GL_UNSIGNED_INT, nullptr);
-		
-		int x = glGetError();
 
 		
 		glfwSwapBuffers(window);
