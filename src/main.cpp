@@ -15,9 +15,8 @@ GLFWwindow* window;
 Shader myShader;
 CA GameOfLife;
 
-int windowSquare = 1000;
+const int windowSquare = 1200;
 
-int CellSize = 0;
 float NxN = 0;
 int N = 0;
 
@@ -56,7 +55,6 @@ void init()
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 6);
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_COMPAT_PROFILE);
 	glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE);
-	//glfwWindowHint(GLFW_DECORATED, GLFW_FALSE);
 	
 
 	if (!glfwInit())

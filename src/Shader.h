@@ -7,7 +7,7 @@
 #include <sstream>
 #include <iostream> 
 
-class Shader
+class Shader //class I followed from learnopengl
 {
 public:
     // the program ID
