@@ -1,3 +1,3 @@
 # E3
 
-Game of Life Excercise I did for uni
+Conway's Game of Life excercise I did for uni
